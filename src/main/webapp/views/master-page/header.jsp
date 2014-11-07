@@ -38,6 +38,7 @@
 					<li><a href="customer/action-1.do"><spring:message code="master.page.customer.action.1" /></a></li>
 					<li><a href="customer/action-2.do"><spring:message code="master.page.customer.action.2" /></a></li>		
 					<li><a href="customer/listThreads.do"><spring:message code="master.page.customer.listThreads" /></a></li>		
+					<li><a href="customer/createThread.do"><spring:message code="master.page.customer.createThread" /></a></li>		
 										
 				</ul>
 			</li>

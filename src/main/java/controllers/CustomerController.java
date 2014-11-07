@@ -11,6 +11,7 @@
 package controllers;
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.validation.Valid;
 import javax.xml.ws.BindingType;
@@ -129,7 +130,7 @@ public class CustomerController extends AbstractController {
 	}
 	
 	@RequestMapping("/saveThread")
-	public ModelAndView saveThread(@ModelAttribute("Hilo") @Valid Hilo thread, BindingResult binding){
+	public ModelAndView saveThread(@ModelAttribute("tread") @Valid Hilo thread, BindingResult binding){
 		
 		
 		ModelAndView result=null;
@@ -185,6 +186,7 @@ public class CustomerController extends AbstractController {
 		if(thread.getUser()==null){//NUEVO
 			
 			thread.setUser(userService.findByPrincipal());
+			thread.setCreationMoment(new Date());//necesario para la restricción de fecha de creación
 			result=new ModelAndView("customer/editThread");
 			result.addObject("user", thread.getUser());
 			result.addObject("thread", thread);			
