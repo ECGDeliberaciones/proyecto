@@ -130,7 +130,7 @@ public class CustomerController extends AbstractController {
 	}
 	
 	@RequestMapping("/saveThread")
-	public ModelAndView saveThread(@ModelAttribute("tread") @Valid Hilo thread, BindingResult binding){
+	public ModelAndView saveThread(@ModelAttribute("thread") @Valid Hilo thread, BindingResult binding){
 		
 		
 		ModelAndView result=null;
