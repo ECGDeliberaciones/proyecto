@@ -56,7 +56,11 @@
 		<security:intercept-url pattern="/customer/saveCabbage.do" access="hasRole('CUSTOMER')" /> 
 		<security:intercept-url pattern="/customer/listOwnCabbages.do" access="hasRole('CUSTOMER')" /> 
 		<security:intercept-url pattern="/customer/listThreads.do" access="hasRole('CUSTOMER')" /> 
-				<security:intercept-url pattern="/customer/seeThread.do" access="hasRole('CUSTOMER')" /> 
+		<security:intercept-url pattern="/customer/seeThread.do" access="hasRole('CUSTOMER')" /> 
+		<security:intercept-url pattern="/customer/editThread.do" access="hasRole('CUSTOMER')" /> 
+				<security:intercept-url pattern="/customer/saveThread.do" access="hasRole('CUSTOMER')" /> 
+		
+		
 		
 
 		<security:intercept-url pattern="/profile/action-1.do" access="isAuthenticated()" /> 

@@ -13,12 +13,14 @@ package controllers;
 import java.util.Collection;
 
 import javax.validation.Valid;
+import javax.xml.ws.BindingType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -94,7 +96,7 @@ public class CustomerController extends AbstractController {
 	ModelAndView result =new ModelAndView("customer/seeThread");
 	result.addObject("hilo",hilo);
 	result.addObject("comments",hilo.getComments());
-	
+	//devuelve hilo mas sus comentarios
 	return result;
 		
 		
@@ -116,6 +118,58 @@ public class CustomerController extends AbstractController {
 		
 	}
 	
+	@RequestMapping("/editThread")
+	public ModelAndView editThread(@RequestParam int id){
+		Hilo thread=threadService.findOne(id);
+		
+		ModelAndView result=createEditModelAndView(thread);
+		
+		return result;
+		
+	}
+	
+	@RequestMapping("/saveThread")
+	public ModelAndView saveThread(@ModelAttribute("Hilo") @Valid Hilo thread, BindingResult binding){
+		
+		
+		ModelAndView result=null;
+		if(binding.hasErrors()){
+			result=createEditModelAndView(thread);
+			
+			System.out.println(binding.toString());
+		}else{
+			
+			
+			try{
+				
+				
+				threadService.save(thread);
+				result=new ModelAndView("redirect:listThreads.do");
+			}catch(Throwable opps){
+				
+				result=createEditModelAndView(thread, "Transactional error");
+				
+			}
+			
+		}
+		
+		
+		return result;
+	}
+	
+	@RequestMapping("/deleteThread")
+	public ModelAndView deleteThread(@RequestParam int id){
+		
+		
+		Hilo thread=threadService.findOne(id);
+		
+		
+		//to do
+		
+		return new ModelAndView("customer/deleteThread");
+		
+	}
+	
 	private ModelAndView createEditModelAndView(domain.Hilo thread){
 		
 		
@@ -131,7 +185,7 @@ public class CustomerController extends AbstractController {
 		if(thread.getUser()==null){//NUEVO
 			
 			thread.setUser(userService.findByPrincipal());
-			result=new ModelAndView("customer/createNewThread");
+			result=new ModelAndView("customer/editThread");
 			result.addObject("user", thread.getUser());
 			result.addObject("thread", thread);			
 			

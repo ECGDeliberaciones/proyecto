@@ -56,6 +56,12 @@
 	</definition>
 	
 	
+	<definition name="customer/editThread" extends="master.page">	
+		<put-attribute name="title" value="Editar/Crear Hilo" />
+		<put-attribute name="body" value="/views/customer/editThread.jsp" />
+	</definition>
+	
+	
 	
 	
 	
