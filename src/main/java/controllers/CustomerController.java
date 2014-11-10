@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Comment;
 import domain.Hilo;
 import domain.User;
 import services.ThreadService;
@@ -97,6 +98,13 @@ public class CustomerController extends AbstractController {
 	ModelAndView result =new ModelAndView("customer/seeThread");
 	result.addObject("hilo",hilo);
 	result.addObject("comments",hilo.getComments());
+	
+	Comment comment=new Comment();
+	
+	comment.setCreationMoment(new Date());
+	comment.setThread(hilo);
+	comment.setUser(userService.findByPrincipal());
+	result.addObject("comment", comment);
 	//devuelve hilo mas sus comentarios
 	return result;
 		
@@ -104,7 +112,25 @@ public class CustomerController extends AbstractController {
 		
 	}
 
-	
+	@RequestMapping("/saveComment")
+	public ModelAndView saveComment(@Valid Comment comment,BindingResult binding){
+		
+		ModelAndView result=new ModelAndView("redirect:listThreads.do");
+		
+		if(binding.hasErrors()){
+			
+			
+		}else{
+			
+			
+			
+			
+		}
+		
+		return null;
+		
+		
+	}
 	
 	@RequestMapping("/createThread")
 	public ModelAndView createThread(){

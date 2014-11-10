@@ -55,3 +55,21 @@ pagesize="5" class="displaytag" >
 
 
 </display:table>
+
+
+<form:form action="customer/saveComment.do" method="post" modelAttribute="comment">
+
+<form:hidden path="id"/>
+<form:hidden path="version"/>	
+<form:hidden path="user"/>
+<form:hidden path="creationMoment" />
+
+
+<acme:textbox code="customer.deliberations.text" path="text"/>
+<acme:submit name="save" code="customer.submit"/>
+
+
+
+
+
+</form:form>
