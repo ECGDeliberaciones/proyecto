@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import domain.Comment;
 import domain.Hilo;
 import domain.User;
+import services.CommentService;
 import services.ThreadService;
 import services.UserService;
 
@@ -40,6 +41,7 @@ public class CustomerController extends AbstractController {
 	
 	@Autowired ThreadService threadService;
 	@Autowired UserService userService;
+	@Autowired CommentService commentService;
 	
 	
 	// Constructors -----------------------------------------------------------
@@ -120,14 +122,23 @@ public class CustomerController extends AbstractController {
 		if(binding.hasErrors()){
 			
 			
+			result=seeThread(comment.getThread().getId());
+			System.out.println(binding.toString());
+			
 		}else{
-			
-			
-			
+			try{
+			commentService.save(comment);
+			result=seeThread(comment.getThread().getId());
+			//debemos comprobar si se guarda o no para guardar tambien el hilo
+			}catch(Throwable op){
+				result=seeThread(comment.getThread().getId());
+				op.printStackTrace();
+				
+			}
 			
 		}
 		
-		return null;
+		return result;
 		
 		
 	}
