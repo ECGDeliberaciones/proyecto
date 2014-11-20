@@ -62,7 +62,7 @@ pagesize="5" class="displaytag" >
 <form:hidden path="version"/>	
 <form:hidden path="user"/>
 <form:hidden path="creationMoment" />
-<form:hidden path=""/>
+<form:hidden path="thread"/>
 
 
 <acme:textbox code="customer.deliberations.text" path="text"/>

@@ -50,6 +50,8 @@
 					<compilerArguments>
 						<Xlint />
 					</compilerArguments>
+					<meminitial>1024m</meminitial>
+				      <maxmem>2024m</maxmem>
 				</configuration>
 			</plugin>
 
