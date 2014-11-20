@@ -71,7 +71,7 @@ public class UserAccount extends DomainEntity implements UserDetails {
 		this.password = password;
 	}
 
-	@NotEmpty
+	//@NotEmpty
 	@Valid
 	@ElementCollection
 	@Override

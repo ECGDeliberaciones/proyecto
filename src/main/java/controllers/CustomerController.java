@@ -13,10 +13,22 @@ package controllers;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.xml.ws.BindingType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
@@ -30,6 +42,9 @@ import org.springframework.web.servlet.ModelAndView;
 import domain.Comment;
 import domain.Hilo;
 import domain.User;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
 import services.CommentService;
 import services.ThreadService;
 import services.UserService;
@@ -42,6 +57,8 @@ public class CustomerController extends AbstractController {
 	@Autowired ThreadService threadService;
 	@Autowired UserService userService;
 	@Autowired CommentService commentService;
+	@Autowired LoginService loginService;
+	@Autowired UserDetailsService userDetailsService;
 	
 	
 	// Constructors -----------------------------------------------------------
@@ -205,6 +222,76 @@ public class CustomerController extends AbstractController {
 		//to do
 		
 		return new ModelAndView("customer/deleteThread");
+		
+	}
+	
+	
+	@RequestMapping("/login")
+	public ModelAndView login(){
+		
+		ModelAndView result=new ModelAndView("customer/login");
+		
+		UserAccount account=new UserAccount();
+		Authority au=new Authority();
+		au.setAuthority("CUSTOMER");
+		account.addAuthority(au);
+		result.addObject("account", account);
+		
+		return result; 
+		
+		
+	}
+	
+	
+	
+	@RequestMapping("/loginMake")
+	public ModelAndView loginMake(@Valid UserAccount user, BindingResult bindingResult, HttpServletRequest request){
+		
+		
+		
+		ModelAndView result;
+		
+		if(bindingResult.hasErrors()){
+			
+			
+			result=login();
+			System.out.println(bindingResult.toString());
+			
+		}else{
+			Md5PasswordEncoder md5=new Md5PasswordEncoder();
+			//System.out.println("password encodeado de customer: "+md5.encodePassword(user.getPassword(), null));
+		//	System.out.println("password de base de datos cust: "+userService.findByPrincipal());
+			
+			Assert.isTrue(loginService.loadUserByUsername(user.getUsername()).getPassword().equals(md5.encodePassword(user.getPassword(), null)));
+			
+
+	        try {
+	            // Must be called from request filtered by Spring Security, otherwise SecurityContextHolder is not updated
+	            
+	        	System.out.println(request.toString());
+	        	
+	            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(), md5.encodePassword(user.getPassword(), null));
+	            token.setDetails(new WebAuthenticationDetails(request));
+	            DaoAuthenticationProvider authenticator = new DaoAuthenticationProvider();
+	            authenticator.setUserDetailsService(userDetailsService);
+	           
+	            Authentication authentication = authenticator.authenticate(token);
+	            SecurityContextHolder.getContext().setAuthentication(authentication);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            SecurityContextHolder.getContext().setAuthentication(null);
+	        }
+			
+			
+			
+			
+			result=new ModelAndView("customer/listThreads");
+			
+			
+			
+		}
+		return result;
+		
 		
 	}
 	
