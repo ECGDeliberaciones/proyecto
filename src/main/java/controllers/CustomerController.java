@@ -10,6 +10,8 @@
 
 package controllers;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
 
@@ -17,6 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.xml.ws.BindingType;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.CensusUser;
 import domain.Comment;
 import domain.Hilo;
 import domain.User;
@@ -243,6 +252,78 @@ public class CustomerController extends AbstractController {
 	}
 	
 	
+	//login from autenticate
+	
+	
+	@RequestMapping("/loginFromAutenticate")
+	public ModelAndView loginFromAutentica(){
+		
+		
+		
+		//implementar
+		
+		return null;
+		
+		
+		
+		
+	}
+	
+	//login from census, this make a http get to census module and get the json output, after tries to make a login with json output
+	//if the person is no present in the bd, save the new person and log in the context.
+	//we are to trust the username census give us is unique
+	//if the person is present in the bd, log in the context
+
+	
+	
+	@RequestMapping("/loginFromCensus")
+	public ModelAndView loginFromCensus(String username) throws JsonParseException, JsonMappingException, IOException{
+		
+		//implementar
+		
+		
+		System.out.println(username);
+		
+		//find in the census with json
+		
+		ObjectMapper objectMapper=new ObjectMapper();
+		
+	//	Document doc=Jsoup.connect("http://localhost:8080/ADMCensus/census/json_one_user.do?votacion_id=1&username="+username).get();
+		//System.out.println(doc.toString());
+		CensusUser censusUser=objectMapper.readValue(new URL("http://localhost:8080/ADMCensus/census/json_one_user.do?votacion_id=1&username="+username),CensusUser.class);
+		System.out.println(censusUser.toString());
+		Assert.isTrue(censusUser.getUsername()!=null);
+		
+		
+		
+		ModelAndView result;
+		
+		if(userService.findByUsername(censusUser.getUsername())!=null){//esta en la base de datos
+			
+			
+			
+			
+		}else{// no esta, lo registramos
+			
+			
+			
+		}
+		
+		
+		
+		return null;
+	}
+	
+	
+	
+	
+	@RequestMapping("loginFromCensusForm")
+	public ModelAndView loginFromCensusFrom(){
+		
+		
+		
+		return new ModelAndView("customer/loginFromCensusForm");
+	}
 	
 	@RequestMapping("/loginMake")
 	public ModelAndView loginMake(@Valid UserAccount user, BindingResult bindingResult, HttpServletRequest request){

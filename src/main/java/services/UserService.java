@@ -30,4 +30,8 @@ public User findByPrincipal() {
 	// TODO Auto-generated method stub
 	return userRepository.findOneByPrincipal(loginService.getPrincipal().getId());
 }
+public User findByUsername(String username) {
+	// TODO Auto-generated method stub
+	return userRepository.findByUsername(username);
+}
 }

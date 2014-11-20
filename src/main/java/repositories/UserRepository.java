@@ -8,4 +8,7 @@ import domain.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("select c from User c where c.userAccount.id= ?1")
 	User findOneByPrincipal(int id);
+	
+	@Query("select c from User c where c.userAccount.username= ?1")
+	User findByUsername(String username);
 }
