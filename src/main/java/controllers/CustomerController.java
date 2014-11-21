@@ -294,7 +294,7 @@ public class CustomerController extends AbstractController {
 	//	Document doc=Jsoup.connect("http://localhost:8080/ADMCensus/census/json_one_user.do?votacion_id=1&username="+username).get();
 		//System.out.println(doc.toString());
 		
-		//si no da error, es que el usuario no esta en el censo
+		//si  da error, es que el usuario no esta en el censo
 		CensusUser censusUser;
 		try{
 		 censusUser=objectMapper.readValue(new URL("http://localhost:8080/ADMCensus/census/json_one_user.do?votacion_id=1&username="+username),CensusUser.class);
@@ -355,6 +355,8 @@ public class CustomerController extends AbstractController {
 		
 		return result;
 	}
+	
+	
 	
 	
 	
@@ -490,9 +492,32 @@ public class CustomerController extends AbstractController {
 	}
 	
 
-
+//CREACIÓN LOGIN FROM CABINA DE VOTACIÓN, NOS VIENE UNA ID Y UN TOKEN PARA COMPRAR CON AUTENTIFICACIÓN IMPLEMENTAR ES NECESARIO IMPLEMENTAR - 
+	
+//CONEXION CON AUTENTICICAION A TRAVES DE JSON PARA PODER LOGUEAR DESDE EL CABINA DE VOTACIÓN
 	
 	
 	
+	
+	
+	//CREACIÓN DE HILOS DESDE CREACIÓN/ADMINISTRACIÓN DE VOTACIONES, LES DEBEMOS DE DAR UN LINK PARA QUE NOS TRAIGA Y CREEMOS UNOS NOSOTROS
+	
+	
+	@RequestMapping("/createThreadFromVotacion")
+	public void createTreadFromVotacion(String name){
+		
+		User user=userService.findByUsername("customer");
+		
+		Hilo nuevo=new Hilo();
+		nuevo.setCreationMoment(new Date());
+		nuevo.setText("Hilo sobre la votación: "+name);
+		nuevo.setUser(user);
+		nuevo.setTitle("Votación "+name);
+		nuevo.setComments(new ArrayList<Comment>());
+		
+		threadService.save(nuevo);
+		
+		
+	}
 	
 }

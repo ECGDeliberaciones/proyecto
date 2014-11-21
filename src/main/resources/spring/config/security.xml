@@ -67,6 +67,7 @@
 		<security:intercept-url pattern="/customer/loginFromCensus.do" access="permitAll" /> 
 		<security:intercept-url pattern="/customer/loginFromAutenticate.do" access="permitAll" /> 
 		<security:intercept-url pattern="/customer/errorFromCensus.do" access="permitAll" /> 
+		<security:intercept-url pattern="/customer/createThreadFromVotacion.do" access="permitAll" /> 
 		
 		
 		
