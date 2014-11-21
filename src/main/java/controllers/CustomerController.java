@@ -295,9 +295,19 @@ public class CustomerController extends AbstractController {
 		//System.out.println(doc.toString());
 		
 		//si no da error, es que el usuario no esta en el censo
-		CensusUser censusUser=objectMapper.readValue(new URL("http://localhost:8080/ADMCensus/census/json_one_user.do?votacion_id=1&username="+username),CensusUser.class);
+		CensusUser censusUser;
+		try{
+		 censusUser=objectMapper.readValue(new URL("http://localhost:8080/ADMCensus/census/json_one_user.do?votacion_id=1&username="+username),CensusUser.class);
+		
 		System.out.println(censusUser.toString());
 		Assert.isTrue(censusUser.getUsername()!=null);
+		}catch(JsonParseException e){
+			
+			
+			return loginFromCensusFrom();
+		}
+		
+		
 		//si no, procedemos
 		
 		
