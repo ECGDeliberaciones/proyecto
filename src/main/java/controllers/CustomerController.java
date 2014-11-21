@@ -12,6 +12,7 @@ package controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -26,6 +27,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -68,6 +70,7 @@ public class CustomerController extends AbstractController {
 	@Autowired CommentService commentService;
 	@Autowired LoginService loginService;
 	@Autowired UserDetailsService userDetailsService;
+	
 	
 	
 	// Constructors -----------------------------------------------------------
@@ -277,7 +280,7 @@ public class CustomerController extends AbstractController {
 	
 	
 	@RequestMapping("/loginFromCensus")
-	public ModelAndView loginFromCensus(String username) throws JsonParseException, JsonMappingException, IOException{
+	public ModelAndView loginFromCensus(String username, HttpServletRequest httpRequest) throws JsonParseException, JsonMappingException, IOException{
 		
 		//implementar
 		
@@ -290,28 +293,57 @@ public class CustomerController extends AbstractController {
 		
 	//	Document doc=Jsoup.connect("http://localhost:8080/ADMCensus/census/json_one_user.do?votacion_id=1&username="+username).get();
 		//System.out.println(doc.toString());
+		
+		//si no da error, es que el usuario no esta en el censo
 		CensusUser censusUser=objectMapper.readValue(new URL("http://localhost:8080/ADMCensus/census/json_one_user.do?votacion_id=1&username="+username),CensusUser.class);
 		System.out.println(censusUser.toString());
 		Assert.isTrue(censusUser.getUsername()!=null);
+		//si no, procedemos
 		
 		
-		
-		ModelAndView result;
+		ModelAndView result;	
 		
 		if(userService.findByUsername(censusUser.getUsername())!=null){//esta en la base de datos
 			
 			
+			//nos marcamos el login
+			loginMakeFromCensus(userService.findByUsername(username).getUserAccount(), httpRequest);
+			
+			result=new ModelAndView("customer/listThreads");
 			
 			
 		}else{// no esta, lo registramos
 			
+			
+			User user = new User();
+			UserAccount userAccount=new UserAccount();
+			Authority a=new Authority();
+			a.setAuthority("CUSTOMER");
+			userAccount.setUsername(username);
+			userAccount.setPassword(new Md5PasswordEncoder().encodePassword(username, null));
+			userAccount.addAuthority(a);
+			user.setName(username);
+			user.setUserAccount(userAccount);
+			user.setBanned(false);
+			user.setEmail("user@mail");
+			user.setLocation("location2");
+			user.setNumberOfMessages(0);
+			user.setSurname("usernameSurnam");
+			user.setComments(new ArrayList<Comment>());
+			user.setThreads(new ArrayList<Hilo>());
+			
+			userService.save(user);
+			loginMakeFromCensus(userAccount, httpRequest);
+			
+			result=new ModelAndView("customer/listThreads");
+
 			
 			
 		}
 		
 		
 		
-		return null;
+		return result;
 	}
 	
 	
@@ -325,12 +357,36 @@ public class CustomerController extends AbstractController {
 		return new ModelAndView("customer/loginFromCensusForm");
 	}
 	
+	public void loginMakeFromCensus(UserAccount user, HttpServletRequest request){
+		
+		  try {
+	            // Must be called from request filtered by Spring Security, otherwise SecurityContextHolder is not updated
+	            Md5PasswordEncoder md5=new Md5PasswordEncoder();
+	        	System.out.println(request.toString());
+	        	System.out.println("contraseña pepe de base de datos: "+user.getPassword());
+	            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword(), null);
+	            token.setDetails(new WebAuthenticationDetails(request));
+	            DaoAuthenticationProvider authenticator = new DaoAuthenticationProvider();
+	            authenticator.setUserDetailsService(userDetailsService);
+	           
+	            Authentication authentication = authenticator.authenticate(token);
+	            SecurityContextHolder.getContext().setAuthentication(authentication);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            SecurityContextHolder.getContext().setAuthentication(null);
+	        }
+			
+			
+		
+		
+	}
+	
 	@RequestMapping("/loginMake")
 	public ModelAndView loginMake(@Valid UserAccount user, BindingResult bindingResult, HttpServletRequest request){
 		
 		
 		
-		ModelAndView result;
+		ModelAndView result=null;
 		
 		if(bindingResult.hasErrors()){
 			
@@ -338,7 +394,11 @@ public class CustomerController extends AbstractController {
 			result=login();
 			System.out.println(bindingResult.toString());
 			
-		}else{
+		}
+		
+		
+		
+		if(!(bindingResult.hasErrors()) || bindingResult==null){
 			Md5PasswordEncoder md5=new Md5PasswordEncoder();
 			//System.out.println("password encodeado de customer: "+md5.encodePassword(user.getPassword(), null));
 		//	System.out.println("password de base de datos cust: "+userService.findByPrincipal());
