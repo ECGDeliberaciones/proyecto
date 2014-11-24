@@ -56,7 +56,7 @@
 		<tiles:insertAttribute name="header" />
 	</div>
 	<div>
-		<h1>
+		<h1 class="Bienvenido">
 			<tiles:insertAttribute name="title" />
 		</h1>
 		<tiles:insertAttribute name="body" />	
