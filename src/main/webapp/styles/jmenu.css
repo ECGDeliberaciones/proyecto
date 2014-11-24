@@ -12,7 +12,6 @@
 	display: table;
 	margin: 0px;
 	padding: 0px;
-	
 }
 
 /* First level */
@@ -26,14 +25,12 @@
 .jMenu li a {
 	padding: 10px;
 	display: block;
-	background-color: #9932CC;
+	background-color: transparent;
 	color: white;
 	text-transform: uppercase;
 	cursor: pointer;
 	font-size: 12px;
-	text-decoration: none; 
-  	font-family: "fantasy", cursive; 
-
+	text-decoration: none;
 }
 
 /* Lower levels */
