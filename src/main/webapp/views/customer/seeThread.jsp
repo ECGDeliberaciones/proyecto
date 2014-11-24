@@ -36,7 +36,6 @@ pagesize="5" class="displaytag" >
 
 <display:column title="${title}"><jstl:out value="${row.title }"></jstl:out></display:column>
 <display:column title="${text }"> <jstl:out value="${row.text }"></jstl:out></display:column>
-<display:column title="${comments }"> <jstl:out value="${row.comments }"></jstl:out></display:column>
 <display:column title="${edit }"><a href="customer/editThread.do?id=${row.id }">${edit }</a></display:column>
 
 </display:table>

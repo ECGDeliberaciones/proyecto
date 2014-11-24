@@ -50,7 +50,7 @@ public class UserAccount extends DomainEntity implements UserDetails {
 	private String password;
 	private Collection<Authority> authorities;
 
-	@Size(min = 5, max = 32)
+	@Size(min = 2, max = 32)
 	@Column(unique = true)
 	@Override
 	public String getUsername() {
@@ -61,7 +61,7 @@ public class UserAccount extends DomainEntity implements UserDetails {
 		this.username = username;
 	}
 
-	@Size(min = 5, max = 32)
+	@Size(min = 2, max = 32)
 	@Override
 	public String getPassword() {
 		return password;
@@ -71,7 +71,7 @@ public class UserAccount extends DomainEntity implements UserDetails {
 		this.password = password;
 	}
 
-	@NotEmpty
+	//@NotEmpty
 	@Valid
 	@ElementCollection
 	@Override
