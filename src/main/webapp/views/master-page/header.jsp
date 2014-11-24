@@ -13,8 +13,8 @@
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 
-<div>
-	<img src="images/logo.png" alt="Sample Co., Inc." />
+<div id="principalIMG">
+	<img class="displayed" src="images/logo.png" alt="Deliberations,AgoraVoting." />
 </div>
 
 <div>
@@ -38,16 +38,13 @@
 					<li><a href="customer/action-1.do"><spring:message code="master.page.customer.action.1" /></a></li>
 					<li><a href="customer/action-2.do"><spring:message code="master.page.customer.action.2" /></a></li>		
 					<li><a href="customer/listThreads.do"><spring:message code="master.page.customer.listThreads" /></a></li>		
-					<li><a href="customer/createThread.do"><spring:message code="master.page.customer.createThread" /></a></li>		
 										
 				</ul>
 			</li>
 		</security:authorize>
 		
 		<security:authorize access="isAnonymous()">
-			<li><a class="fNiv" href="customer/login.do"><spring:message code="master.page.login" /></a></li>
-			<li><a class="fNiv" href="customer/loginFromCensusForm.do"><spring:message code="master.page.login" /></a></li>
-			
+			<li><a class="fNiv" href="security/login.do"><spring:message code="master.page.login" /></a></li>
 			
 			
 			
