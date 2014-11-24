@@ -520,4 +520,9 @@ public class CustomerController extends AbstractController {
 		
 	}
 	
+	
+	
+	
+	
+	//login desde cabina votacion con toquen, falta implementar por falta de token por parte de autenticación a ellos
 }
