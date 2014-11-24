@@ -22,6 +22,8 @@
 <spring:message code="customer.deliberations.date" var="date"></spring:message>
 <spring:message code="customer.deliberations.comments" var="comments"></spring:message>
 <spring:message code="customer.deliberations.text" var="text"></spring:message>
+<spring:message code="customer.deliberations.edit" var="edit"></spring:message>
+
 
 
 
@@ -34,8 +36,7 @@ pagesize="5" class="displaytag" >
 
 <display:column title="${title}"><jstl:out value="${row.title }"></jstl:out></display:column>
 <display:column title="${text }"> <jstl:out value="${row.text }"></jstl:out></display:column>
-<display:column title="${comments }"> <jstl:out value="${row.comments }"></jstl:out></display:column>
-
+<display:column title="${edit }"><a href="customer/editThread.do?id=${row.id }">${edit }</a></display:column>
 
 </display:table>
 
@@ -53,3 +54,22 @@ pagesize="5" class="displaytag" >
 
 
 </display:table>
+
+
+<form:form action="customer/saveComment.do" method="post" modelAttribute="comment">
+
+<form:hidden path="id"/>
+<form:hidden path="version"/>	
+<form:hidden path="user"/>
+<form:hidden path="creationMoment" />
+<form:hidden path="thread"/>
+
+
+<acme:textbox code="customer.deliberations.text" path="text"/>
+<acme:submit name="save" code="customer.submit"/>
+
+
+
+
+
+</form:form>
